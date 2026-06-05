@@ -400,6 +400,7 @@ let video = document.getElementById("video");
 let canvas = document.getElementById("canvas");
 let currentAttendanceData = [];
 
+// Real workers list
 const APPROVED_WORKERS = ["rakesh", "ramesh", "suresh", "amit"];
 
 window.onload = function() {
@@ -623,7 +624,14 @@ function toggleDate(dateId) {
     }
 }
 
+// 🔒 SECURED CSV EXPORT LOGIC WITH PASSWORD LOCK
 function exportToCSV() {
+    let password = prompt("Admin Password daalye Excel Report download karne ke liye:");
+    if (password !== "DR@2026") {
+        if (password !== null) alert("Galat Password! Access Denied.");
+        return;
+    }
+
     if (currentAttendanceData.length === 0) {
         alert("Export karne ke liye koi data nahi hai!");
         return;
@@ -653,7 +661,7 @@ function exportToCSV() {
 }
 
 function clearHistory() {
-    let password = prompt("Admin Password daalye:");
+    let password = prompt("Admin Password daalye History clear karne ke liye:");
     if (password === "DR@2026") { 
         if (confirm("Kya aap sach me saari history delete karna chahte hain?")) {
             currentAttendanceData = [];
