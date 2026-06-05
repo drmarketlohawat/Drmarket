@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR Market Attendance</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --primary-green: #22c55e;
+            --primary-blue: #3b82f6;
+            --primary-orange: #f97316;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-dark: #334155;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            padding: 15px; 
+            background-color: var(--bg-dark); 
+            margin: 0; 
+            color: var(--text-light);
+        }
+
+        .container { 
+            background: var(--card-dark); 
+            padding: 24px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+            max-width: 460px; 
+            margin: 10px auto; 
+            border: 1px solid var(--border-dark);
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-dark);
+        }
+
+        .logo-svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .brand-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-light);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-tagline {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin: 4px 0 0 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .dealership-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.03);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .camera-box { 
+            width: 100%; 
+            height: 230px; 
+            background: #020617; 
+            margin: 0 auto 20px auto; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            position: relative; 
+            border: 2px solid var(--border-dark); 
+        }
+        
+        .camera-box::before {
+            content: "• LIVE TRACKING";
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(74, 222, 128, 0.4);
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transform: scaleX(-1); 
+        }
+
+        canvas { display: none; }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        input[type="text"] { 
+            width: 100%; 
+            padding: 15px 15px 15px 42px; 
+            box-sizing: border-box; 
+            border: 1px solid var(--border-dark); 
+            border-radius: 12px; 
+            font-size: 16px; 
+            background-color: #0f172a;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            fill: var(--text-muted);
+            width: 18px;
+            height: 18px;
+        }
+        
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            margin: 5px 0; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 16px; 
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-entry { 
+            background-color: var(--primary-green); 
+            color: #052e16; 
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-exit { 
+            background-color: var(--primary-orange); 
+            color: #fff; 
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+        }
+
+        button:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .btn-action-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-clear { 
+            background-color: transparent; 
+            color: #ef4444; 
+            border: 1px solid #7f1d1d;
+            padding: 6px 14px; 
+            font-size: 12px; 
+            border-radius: 8px;
+            width: auto;
+        }
+
+        .btn-export { 
+            background-color: rgba(59, 130, 246, 0.15); 
+            color: var(--primary-blue); 
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 6px 14px; 
+            font-size: 12px; 
+            border-radius: 8px;
+            width: auto;
+        }
+
+        #result {
+            font-size: 14px;
+            text-align: center;
+            margin: 15px 0;
+            min-height: 20px;
+        }
+        
+        .history-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        #history { 
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .date-group {
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #151f32;
+        }
+
+        .date-header {
+            background: #1e293b;
+            padding: 12px 16px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-dark);
+            user-select: none;
+        }
+
+        .date-header::after {
+            content: "▼";
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+        }
+
+        .date-group.collapsed .date-header::after {
+            transform: rotate(-90deg);
+        }
+
+        .date-content {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #0f172a;
+        }
+
+        .date-group.collapsed .date-content {
+            display: none;
+        }
+        
+        .entry { 
+            background: #1e293b;
+            border: 1px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 12px; 
+            display: flex; 
+            flex-direction: column;
+            gap: 12px; 
+        }
+
+        .entry-top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .entry img { 
+            width: 75px; 
+            height: 75px; 
+            object-fit: cover; 
+            border-radius: 8px; 
+            border: 1px solid var(--border-dark); 
+            transform: scaleX(-1); 
+            flex-shrink: 0;
+        }
+
+        .entry-details { 
+            font-size: 12px; 
+            color: #cbd5e1; 
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .entry-name-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+
+        .exit-section {
+            background: rgba(249, 115, 22, 0.04);
+            border-top: 1px dashed rgba(249, 115, 22, 0.2);
+            padding-top: 10px;
+            margin-top: 3px;
+            font-size: 12px;
+            color: #ffedd5;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .exit-img {
+            width: 45px !important;
+            height: 45px !important;
+            border: 1px solid rgba(249, 115, 22, 0.3) !important;
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            padding: 30px 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="brand-header">
+        <svg class="logo-svg" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#334155" stroke-width="3"/>
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#3b82f6" stroke-width="5" stroke-dasharray="8 6"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#1e293b" stroke-width="2"/>
+            <circle cx="50" cy="50" r="28" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+            <path d="M36 45 L50 36 L64 45 L50 54 Z" fill="#64748b"/>
+            <path d="M36 45 L50 54 L50 66 L36 56 Z" fill="#475569"/>
+            <path d="M50 54 L64 45 L64 56 L50 66 Z" fill="#334155"/>
+            <path d="M28 52 L44 52" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+            <path d="M56 52 L72 52" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="brand-name">DR MARKET</div>
+        <div class="brand-tagline">Attendance System</div>
+        
+        <div class="dealership-badges">
+            <div class="badge-item">🏢 JK Cement</div>
+            <div class="badge-item">⭕ Apollo Tyres</div>
+        </div>
+    </div>
+
+    <div class="camera-box">
+        <video id="video" autoplay playsinline></video>
+    </div>
+    <canvas id="canvas" width="320" height="240"></canvas>
+
+    <div class="input-group">
+        <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z"/></svg>
+        <input type="text" id="worker" placeholder="Enter Worker Name" oninput="checkWorkerState()">
+    </div>
+
+    <button id="actionBtn" class="btn-entry" onclick="handleAttendance()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 2a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3z"/></svg>
+        <span id="btnText">Mark Entry</span>
+    </button>
+
+    <p id="result" style="font-weight: 600;"></p>
+
+    <div class="history-header">
+        <h2>Attendance History</h2>
+        <div class="btn-action-group">
+            <button class="btn-export" onclick="exportToCSV()">📊 Export CSV</button>
+            <button class="btn-clear" onclick="clearHistory()">Clear</button>
+        </div>
+    </div>
+    <div id="history"></div>
+</div>
+
+<script>
+let video = document.getElementById("video");
+let canvas = document.getElementById("canvas");
+let currentAttendanceData = [];
+
+const APPROVED_WORKERS = ["rakesh", "ramesh", "suresh", "amit"];
+
+window.onload = function() {
+    loadHistory();
+    initCamera();
+};
+
+function initCamera() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+        .then(function(stream) {
+            video.srcObject = stream;
+        })
+        .catch(function(err) {
+            console.error(err);
+        });
+    }
+}
+
+function loadHistory() {
+    let saved = localStorage.getItem("dr_attendance_data");
+    if (saved) {
+        currentAttendanceData = JSON.parse(saved);
+        renderHistory();
+    } else {
+        document.getElementById("history").innerHTML = "<div class='no-data'>No history found.</div>";
+    }
+}
+
+function checkWorkerState() {
+    let name = document.getElementById("worker").value.trim().toLowerCase();
+    let btn = document.getElementById("actionBtn");
+    let btnText = document.getElementById("btnText");
+
+    if (name === "") {
+        btn.className = "btn-entry";
+        btnText.innerText = "Mark Entry";
+        return;
+    }
+
+    let ongoingRecord = currentAttendanceData.find(r => r.name.toLowerCase() === name && !r.exitTime);
+
+    if (ongoingRecord) {
+        btn.className = "btn-exit";
+        btnText.innerText = "Mark Exit";
+    } else {
+        btn.className = "btn-entry";
+        btnText.innerText = "Mark Entry";
+    }
+}
+
+function handleAttendance() {
+    let workerInput = document.getElementById("worker");
+    let name = workerInput.value.trim();
+    let resultDiv = document.getElementById("result");
+
+    if (name === "") {
+        alert("Worker Name dalo");
+        return;
+    }
+
+    if (!APPROVED_WORKERS.includes(name.toLowerCase())) {
+        resultDiv.style.color = "#ef4444";
+        resultDiv.innerHTML = "❌ Error: Worker list me nahi hai!";
+        alert("Aapka naam approved nahi hai.");
+        return;
+    }
+
+    const challenges = ["Smile Please 😊", "Look LEFT ⬅️", "Look RIGHT ➡️"];
+    const randomChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+    
+    let userVerified = confirm("🔐 ANTI-CHEAT VERIFICATION:\n\nCamera ke samne ye action karne ke baad hi OK dabayein:\n👉 " + randomChallenge);
+    
+    if(!userVerified) {
+        resultDiv.style.color = "#ef4444";
+        resultDiv.innerHTML = "❌ Verification Cancelled!";
+        return;
+    }
+
+    resultDiv.style.color = "var(--primary-blue)";
+    resultDiv.innerHTML = "Processing secured logging...";
+
+    let photoDataUrl = "";
+    try {
+        let context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, 320, 240);
+        photoDataUrl = canvas.toDataURL("image/jpeg");
+    } catch(e) {
+        photoDataUrl = "No Photo Loaded";
+    }
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+            let now = new Date();
+            let dateKey = now.toLocaleDateString('en-GB'); 
+            let timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon)
+            .then(response => response.json())
+            .then(data => {
+                let place = data && data.display_name ? data.display_name : "GPS: " + lat.toFixed(4) + ", " + lon.toFixed(4);
+                processState(name, dateKey, timeString, place, photoDataUrl);
+                workerInput.value = ""; 
+                checkWorkerState();
+            })
+            .catch(err => {
+                processState(name, dateKey, timeString, "Location Logged (API Offline)", photoDataUrl);
+                workerInput.value = "";
+                checkWorkerState();
+            });
+
+        }, function(error) {
+            let now = new Date();
+            let dateKey = now.toLocaleDateString('en-GB');
+            let timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            processState(name, dateKey, timeString, "Location Permission Blocked", photoDataUrl);
+            workerInput.value = "";
+            checkWorkerState();
+        });
+    }
+}
+
+function processState(name, dateKey, timeString, place, photoDataUrl) {
+    let resultDiv = document.getElementById("result");
+    let ongoingIndex = currentAttendanceData.findIndex(r => r.name.toLowerCase() === name.toLowerCase() && !r.exitTime);
+
+    if (ongoingIndex !== -1) {
+        currentAttendanceData[ongoingIndex].exitTime = timeString;
+        currentAttendanceData[ongoingIndex].exitPlace = place;
+        currentAttendanceData[ongoingIndex].exitPhoto = photoDataUrl;
+        
+        resultDiv.style.color = "var(--primary-orange)";
+        resultDiv.innerHTML = "✓ " + name + " ka EXIT lag gaya!";
+    } else {
+        let newRecord = {
+            id: Date.now(),
+            name: name,
+            date: dateKey, 
+            entryTime: timeString,
+            entryPlace: place,
+            entryPhoto: photoDataUrl,
+            exitTime: null,
+            exitPlace: null,
+            exitPhoto: null
+        };
+        currentAttendanceData.unshift(newRecord);
+        
+        resultDiv.style.color = "var(--primary-green)";
+        resultDiv.innerHTML = "✓ " + name + " ki ENTRY lag gayi!";
+    }
+
+    localStorage.setItem("dr_attendance_data", JSON.stringify(currentAttendanceData));
+    renderHistory();
+}
+
+function renderHistory() {
+    let historyDiv = document.getElementById("history");
+    if (currentAttendanceData.length === 0) {
+        historyDiv.innerHTML = "<div class='no-data'>No history found.</div>";
+        return;
+    }
+
+    let grouped = {};
+    currentAttendanceData.forEach(record => {
+        if (!grouped[record.date]) {
+            grouped[record.date] = [];
+        }
+        grouped[record.date].push(record);
+    });
+
+    let html = "";
+    Object.keys(grouped).forEach(date => {
+        html += "<div class='date-group' id='group-" + date.replace(/\//g, '-') + "'>" +
+                "  <div class='date-header' onclick='toggleDate(\"" + date.replace(/\//g, '-') + "\")'>" +
+                "    📅 Date: " + date + " (" + grouped[date].length + " Records)" +
+                "  </div>" +
+                "  <div class='date-content'>";
+
+        grouped[date].forEach(record => {
+            html += "<div class='entry'>" +
+                    "  <div class='entry-top'>" +
+                    "    <img src='" + record.entryPhoto + "' alt='Entry Photo'>" +
+                    "    <div class='entry-details'>" +
+                    "       <div class='entry-name-text'>" + record.name + "</div>" +
+                    "       <span style='color:#4ade80; font-size:11px; font-weight:bold;'>📥 ENTRY</span><br>" +
+                    "       <strong>🕒 Time:</strong> " + record.entryTime + "<br>" +
+                    "       <strong>🏠 Place:</strong> " + record.entryPlace + "" +
+                    "    </div>" +
+                    "  </div>";
+
+            if (record.exitTime) {
+                html += "  <div class='exit-section'>" +
+                        "    <img class='exit-img' src='" + record.exitPhoto + "' alt='Exit Photo'>" +
+                        "    <div class='entry-details'>" +
+                        "       <span style='color:#f97316; font-size:11px; font-weight:bold;'>📤 EXIT</span><br>" +
+                        "       <strong>🕒 Time:</strong> " + record.exitTime + "<br>" +
+                        "       <strong>🏠 Place:</strong> " + record.exitPlace + "" +
+                        "    </div>" +
+                        "  </div>";
+            } else {
+                html += "  <div class='exit-section' style='background:rgba(255,255,255,0.02); border-top:1px dashed #334155; color:var(--text-muted); padding: 6px 10px; font-style:italic; font-size:11px;'>" +
+                        "    ⚠️ Market field par hai (Exit Pending)..." +
+                        "  </div>";
+            }
+            html += "</div>";
+        });
+
+        html += "  </div>" +
+                "</div>";
+    });
+
+    historyDiv.innerHTML = html;
+}
+
+function toggleDate(dateId) {
+    let el = document.getElementById("group-" + dateId);
+    if(el) {
+        el.classList.toggle("collapsed");
+    }
+}
+
+function exportToCSV() {
+    if (currentAttendanceData.length === 0) {
+        alert("Export karne ke liye koi data nahi hai!");
+        return;
+    }
+
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Worker Name,Date,Entry Time,Entry Location,Exit Time,Exit Location\n";
+
+    currentAttendanceData.forEach(r => {
+        let name = r.name.replace(/,/g, " "); 
+        let date = r.date;
+        let eTime = r.entryTime;
+        let ePlace = r.entryPlace.replace(/,/g, " "); 
+        let xTime = r.exitTime ? r.exitTime : "Pending";
+        let xPlace = r.exitPlace ? r.exitPlace.replace(/,/g, " ") : "Still Working";
+
+        csvContent += `"${name}","${date}","${eTime}","${ePlace}","${xTime}","${xPlace}"\n`;
+    });
+
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `DR_Market_Attendance_Report_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function clearHistory() {
+    let password = prompt("Admin Password daalye:");
+    if (password === "DR@2026") { 
+        if (confirm("Kya aap sach me saari history delete karna chahte hain?")) {
+            currentAttendanceData = [];
+            localStorage.removeItem("dr_attendance_data");
+            document.getElementById("history").innerHTML = "<div class='no-data'>No history found.</div>";
+            document.getElementById("result").innerHTML = "";
+            alert("History clear ho gayi.");
+        }
+    } else if (password === null) {
+        return;
+    } else {
+        alert("Galat Password!");
+    }
+}
+</script>
+
+</body>
+</html>
