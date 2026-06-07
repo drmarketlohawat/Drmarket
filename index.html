@@ -3,111 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DR Market Attendance</title>
+    <title>DR Market Attendance | Premium Dashboard</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
         :root {
-            --bg-dark: #0f172a;
-            --card-dark: #1e293b;
-            --primary-green: #22c55e;
-            --primary-blue: #3b82f6;
-            --primary-orange: #f97316;
+            --bg-dark: #111827;
+            --card-dark: #1f2937;
+            --jk-green: #16a34a;
+            --apollo-purple: #7e22ce;
+            --apollo-orange: #f97316;
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-            --border-dark: #334155;
+            --border-dark: #374151;
         }
 
         body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            padding: 15px; 
+            font-family: 'Inter', sans-serif; 
             background-color: var(--bg-dark); 
             margin: 0; 
+            padding: 0;
             color: var(--text-light);
+            background-image: radial-gradient(circle at top right, rgba(126, 34, 206, 0.1), transparent 40%),
+                              radial-gradient(circle at top left, rgba(22, 163, 74, 0.05), transparent 40%);
+        }
+
+        /* --- PREMIUM HEADER --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-dark);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .brand-jk {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .brand-jk span { color: var(--jk-green); font-size: 18px; }
+
+        .brand-dr {
+            text-align: center;
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+        .brand-dr span {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .brand-apollo {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text-light);
+            text-align: right;
+            line-height: 1;
+        }
+        .brand-apollo span {
+            display: block;
+            font-size: 8px;
+            color: var(--apollo-purple);
+            letter-spacing: 1.5px;
         }
 
         .container { 
-            background: var(--card-dark); 
-            padding: 24px; 
-            border-radius: 20px; 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+            padding: 20px; 
             max-width: 460px; 
-            margin: 10px auto; 
-            border: 1px solid var(--border-dark);
+            margin: 0 auto; 
         }
 
-        .brand-header {
+        /* --- HERO TAGLINE --- */
+        .hero-text {
             text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed var(--border-dark);
-        }
-
-        .logo-svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 10px;
-        }
-
-        .brand-name {
+            margin: 15px 0 25px 0;
             font-size: 26px;
             font-weight: 800;
+            line-height: 1.2;
             color: var(--text-light);
-            margin: 0;
-            letter-spacing: 0.5px;
         }
+        .hero-text .highlight-orange { color: var(--apollo-orange); }
+        .hero-text .highlight-purple { color: #a855f7; }
 
-        .brand-tagline {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin: 4px 0 0 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .dealership-badges {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 12px;
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .badge-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(255,255,255,0.03);
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-        
+        /* --- CAMERA UI --- */
         .camera-box { 
             width: 100%; 
-            height: 230px; 
-            background: #020617; 
-            margin: 0 auto 20px auto; 
-            border-radius: 14px; 
+            height: 240px; 
+            background: #000; 
+            margin: 0 auto 15px auto; 
+            border-radius: 16px; 
             overflow: hidden; 
             position: relative; 
-            border: 2px solid var(--border-dark); 
+            border: 2px solid var(--border-dark);
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.1);
         }
         
-        .camera-box::before {
-            content: "• LIVE TRACKING";
+        .cam-badge-left {
             position: absolute;
             top: 12px;
             left: 12px;
-            background: rgba(34, 197, 94, 0.2);
+            background: rgba(22, 163, 74, 0.2);
             color: #4ade80;
             font-size: 10px;
             font-weight: bold;
             padding: 4px 10px;
             border-radius: 20px;
             border: 1px solid rgba(74, 222, 128, 0.4);
-            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        .cam-badge-right {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(248, 250, 252, 0.1);
+            color: #cbd5e1;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 10;
         }
 
@@ -117,35 +143,47 @@
             object-fit: cover; 
             transform: scaleX(-1); 
         }
-
         canvas { display: none; }
 
-        .input-group {
-            position: relative;
-            margin-bottom: 16px;
+        /* --- DEALER BADGES --- */
+        .dealership-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--card-dark);
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 1px solid var(--border-dark);
+            font-size: 12px;
+            font-weight: 600;
+            color: #e2e8f0;
         }
 
+        /* --- INPUT & BUTTONS --- */
+        .input-group { position: relative; margin-bottom: 16px; }
         input[type="text"] { 
             width: 100%; 
-            padding: 15px 15px 15px 42px; 
+            padding: 16px 16px 16px 45px; 
             box-sizing: border-box; 
             border: 1px solid var(--border-dark); 
             border-radius: 12px; 
             font-size: 16px; 
-            background-color: #0f172a;
+            background-color: var(--bg-dark);
             color: var(--text-light);
-            transition: all 0.2s ease;
         }
-
         input[type="text"]:focus {
             outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: var(--jk-green);
         }
-
         .input-icon {
             position: absolute;
-            left: 14px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
             fill: var(--text-muted);
@@ -155,93 +193,64 @@
         
         button { 
             width: 100%; 
-            padding: 15px; 
-            margin: 5px 0; 
+            padding: 16px; 
             cursor: pointer; 
             border: none; 
             border-radius: 12px; 
-            font-weight: 700; 
+            font-weight: 800; 
             font-size: 16px; 
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
-
         .btn-entry { 
-            background-color: var(--primary-green); 
-            color: #052e16; 
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-        }
-
-        .btn-exit { 
-            background-color: var(--primary-orange); 
+            background-color: var(--jk-green); 
             color: #fff; 
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+        .btn-exit { 
+            background-color: var(--apollo-orange); 
+            color: #fff; 
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
         }
 
-        button:active {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        .btn-action-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-clear { 
-            background-color: transparent; 
-            color: #ef4444; 
-            border: 1px solid #7f1d1d;
-            padding: 6px 14px; 
-            font-size: 12px; 
-            border-radius: 8px;
-            width: auto;
-        }
-
-        .btn-export { 
-            background-color: rgba(59, 130, 246, 0.15); 
-            color: var(--primary-blue); 
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            padding: 6px 14px; 
-            font-size: 12px; 
-            border-radius: 8px;
-            width: auto;
-        }
-
-        #result {
-            font-size: 14px;
-            text-align: center;
-            margin: 15px 0;
-            min-height: 20px;
-        }
+        #result { font-size: 14px; text-align: center; margin: 15px 0; min-height: 20px; font-weight: 600; }
         
+        /* --- HISTORY SECTION --- */
         .history-header {
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            margin-top: 25px;
+            margin-top: 30px;
             margin-bottom: 15px;
+            border-bottom: 2px solid var(--apollo-orange);
+            padding-bottom: 10px;
+        }
+        .history-header h2 { margin: 0; font-size: 20px; font-weight: 800; }
+
+        .btn-action-group { display: flex; gap: 8px; }
+        .btn-export { 
+            background-color: rgba(126, 34, 206, 0.15); 
+            color: #c084fc; 
+            border: 1px solid rgba(126, 34, 206, 0.4);
+            padding: 8px 14px; font-size: 12px; border-radius: 8px; width: auto; font-weight: 600;
+        }
+        .btn-clear { 
+            background-color: rgba(239, 68, 68, 0.1); 
+            color: #f87171; 
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 14px; font-size: 12px; border-radius: 8px; width: auto; font-weight: 600;
         }
 
-        #history { 
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        #history { display: flex; flex-direction: column; gap: 12px; }
 
         .date-group {
             border: 1px solid var(--border-dark);
             border-radius: 12px;
             overflow: hidden;
-            background: #151f32;
+            background: var(--card-dark);
         }
-
         .date-header {
-            background: #1e293b;
-            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            padding: 14px 16px;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
@@ -249,34 +258,12 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-dark);
-            user-select: none;
         }
-
-        .date-header::after {
-            content: "▼";
-            font-size: 11px;
-            color: var(--text-muted);
-            transition: transform 0.2s ease;
-        }
-
-        .date-group.collapsed .date-header::after {
-            transform: rotate(-90deg);
-        }
-
-        .date-content {
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: #0f172a;
-        }
-
-        .date-group.collapsed .date-content {
-            display: none;
-        }
+        .date-content { padding: 12px; display: flex; flex-direction: column; gap: 12px; background: var(--bg-dark); }
+        .date-group.collapsed .date-content { display: none; }
         
         .entry { 
-            background: #1e293b;
+            background: var(--card-dark);
             border: 1px solid var(--border-dark);
             border-radius: 10px;
             padding: 12px; 
@@ -284,115 +271,70 @@
             flex-direction: column;
             gap: 12px; 
         }
-
-        .entry-top {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 14px;
-        }
-
+        .entry-top { display: flex; align-items: center; gap: 14px; }
         .entry img { 
-            width: 75px; 
-            height: 75px; 
-            object-fit: cover; 
-            border-radius: 8px; 
-            border: 1px solid var(--border-dark); 
-            transform: scaleX(-1); 
-            flex-shrink: 0;
+            width: 65px; height: 65px; object-fit: cover; 
+            border-radius: 8px; border: 1px solid var(--border-dark); 
+            transform: scaleX(-1); flex-shrink: 0;
         }
-
-        .entry-details { 
-            font-size: 12px; 
-            color: #cbd5e1; 
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-
-        .entry-name-text {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-light);
-            margin-bottom: 3px;
-        }
+        .entry-details { font-size: 12px; color: #cbd5e1; line-height: 1.5; flex-grow: 1; }
+        .entry-name-text { font-size: 16px; font-weight: 700; color: var(--text-light); margin-bottom: 3px; }
 
         .exit-section {
-            background: rgba(249, 115, 22, 0.04);
+            background: rgba(249, 115, 22, 0.05);
             border-top: 1px dashed rgba(249, 115, 22, 0.2);
-            padding-top: 10px;
-            margin-top: 3px;
-            font-size: 12px;
-            color: #ffedd5;
-            display: flex;
-            gap: 10px;
-            align-items: center;
+            padding-top: 10px; margin-top: 3px; font-size: 12px; display: flex; gap: 10px; align-items: center;
         }
-
-        .exit-img {
-            width: 45px !important;
-            height: 45px !important;
-            border: 1px solid rgba(249, 115, 22, 0.3) !important;
-        }
-
-        .no-data {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 14px;
-            padding: 30px 0;
-            font-style: italic;
-        }
+        .exit-img { width: 45px !important; height: 45px !important; border: 1px solid rgba(249, 115, 22, 0.3) !important; }
+        .no-data { text-align: center; color: var(--text-muted); font-size: 14px; padding: 30px 0; font-style: italic; }
     </style>
 </head>
 <body>
 
+<div class="top-nav">
+    <div class="brand-jk"><span>⬟</span> JKcement</div>
+    <div class="brand-dr">DR MARKET<span>Lohawat</span></div>
+    <div class="brand-apollo">apollo<span>TYRES</span></div>
+</div>
+
 <div class="container">
     
-    <div class="brand-header">
-        <svg class="logo-svg" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" fill="none" stroke="#334155" stroke-width="3"/>
-            <circle cx="50" cy="50" r="44" fill="none" stroke="#3b82f6" stroke-width="5" stroke-dasharray="8 6"/>
-            <circle cx="50" cy="50" r="38" fill="none" stroke="#1e293b" stroke-width="2"/>
-            <circle cx="50" cy="50" r="28" fill="#0f172a" stroke="#334155" stroke-width="1"/>
-            <path d="M36 45 L50 36 L64 45 L50 54 Z" fill="#64748b"/>
-            <path d="M36 45 L50 54 L50 66 L36 56 Z" fill="#475569"/>
-            <path d="M50 54 L64 45 L64 56 L50 66 Z" fill="#334155"/>
-            <path d="M28 52 L44 52" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
-            <path d="M56 52 L72 52" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
-        </svg>
-        <div class="brand-name">DR MARKET</div>
-        <div class="brand-tagline">Attendance System</div>
-        
-        <div class="dealership-badges">
-            <div class="badge-item">🏢 JK Cement</div>
-            <div class="badge-item">⭕ Apollo Tyres</div>
-        </div>
+    <div class="hero-text">
+        Built Bigger,<br>
+        <span class="highlight-orange">Built Stronger</span><br>
+        with <span class="highlight-purple">Top Brands.</span>
     </div>
 
     <div class="camera-box">
+        <div class="cam-badge-left">• LIVE TRACKING</div>
+        <div class="cam-badge-right">🔒 SECURE LOCATION</div>
         <video id="video" autoplay playsinline></video>
     </div>
     <canvas id="canvas" width="320" height="240"></canvas>
+
+    <div class="dealership-badges">
+        <div class="badge-item">🏢 JK Cement Partner</div>
+        <div class="badge-item">⭕ Apollo Tyres Dealer</div>
+    </div>
 
     <div class="input-group">
         <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z"/></svg>
         <input type="text" id="worker" placeholder="Enter Worker Name" oninput="checkWorkerState()">
     </div>
 
-    <button id="actionBtn" class="btn-entry" onclick="handleAttendance()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 2a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3z"/></svg>
-        <span id="btnText">Mark Entry</span>
-    </button>
+    <button id="actionBtn" class="btn-entry" onclick="handleAttendance()">Mark Entry</button>
 
-    <p id="result" style="font-weight: 600;"></p>
+    <p id="result"></p>
 
     <div class="history-header">
         <h2>Attendance History</h2>
         <div class="btn-action-group">
-            <button class="btn-export" onclick="exportToCSV()">📊 Export CSV</button>
+            <button class="btn-export" onclick="exportToCSV()">🔒 Export CSV</button>
             <button class="btn-clear" onclick="clearHistory()">Clear</button>
         </div>
     </div>
     <div id="history"></div>
+
 </div>
 
 <script>
@@ -400,7 +342,7 @@ let video = document.getElementById("video");
 let canvas = document.getElementById("canvas");
 let currentAttendanceData = [];
 
-// Real workers list
+// 🔒 APPROVED WORKERS LIST
 const APPROVED_WORKERS = ["rakesh", "ramesh", "suresh", "amit"];
 
 window.onload = function() {
@@ -433,11 +375,10 @@ function loadHistory() {
 function checkWorkerState() {
     let name = document.getElementById("worker").value.trim().toLowerCase();
     let btn = document.getElementById("actionBtn");
-    let btnText = document.getElementById("btnText");
 
     if (name === "") {
         btn.className = "btn-entry";
-        btnText.innerText = "Mark Entry";
+        btn.innerText = "Mark Entry";
         return;
     }
 
@@ -445,10 +386,10 @@ function checkWorkerState() {
 
     if (ongoingRecord) {
         btn.className = "btn-exit";
-        btnText.innerText = "Mark Exit";
+        btn.innerText = "Mark Exit";
     } else {
         btn.className = "btn-entry";
-        btnText.innerText = "Mark Entry";
+        btn.innerText = "Mark Entry";
     }
 }
 
@@ -469,6 +410,7 @@ function handleAttendance() {
         return;
     }
 
+    // ANTI-SPOOFING CHALLENGE
     const challenges = ["Smile Please 😊", "Look LEFT ⬅️", "Look RIGHT ➡️"];
     const randomChallenge = challenges[Math.floor(Math.random() * challenges.length)];
     
@@ -480,7 +422,7 @@ function handleAttendance() {
         return;
     }
 
-    resultDiv.style.color = "var(--primary-blue)";
+    resultDiv.style.color = "var(--apollo-purple)";
     resultDiv.innerHTML = "Processing secured logging...";
 
     let photoDataUrl = "";
@@ -534,7 +476,7 @@ function processState(name, dateKey, timeString, place, photoDataUrl) {
         currentAttendanceData[ongoingIndex].exitPlace = place;
         currentAttendanceData[ongoingIndex].exitPhoto = photoDataUrl;
         
-        resultDiv.style.color = "var(--primary-orange)";
+        resultDiv.style.color = "var(--apollo-orange)";
         resultDiv.innerHTML = "✓ " + name + " ka EXIT lag gaya!";
     } else {
         let newRecord = {
@@ -550,7 +492,7 @@ function processState(name, dateKey, timeString, place, photoDataUrl) {
         };
         currentAttendanceData.unshift(newRecord);
         
-        resultDiv.style.color = "var(--primary-green)";
+        resultDiv.style.color = "var(--jk-green)";
         resultDiv.innerHTML = "✓ " + name + " ki ENTRY lag gayi!";
     }
 
@@ -567,9 +509,7 @@ function renderHistory() {
 
     let grouped = {};
     currentAttendanceData.forEach(record => {
-        if (!grouped[record.date]) {
-            grouped[record.date] = [];
-        }
+        if (!grouped[record.date]) { grouped[record.date] = []; }
         grouped[record.date].push(record);
     });
 
@@ -577,17 +517,17 @@ function renderHistory() {
     Object.keys(grouped).forEach(date => {
         html += "<div class='date-group' id='group-" + date.replace(/\//g, '-') + "'>" +
                 "  <div class='date-header' onclick='toggleDate(\"" + date.replace(/\//g, '-') + "\")'>" +
-                "    📅 Date: " + date + " (" + grouped[date].length + " Records)" +
+                "    📅 " + date + " (" + grouped[date].length + " Records)" +
                 "  </div>" +
                 "  <div class='date-content'>";
 
         grouped[date].forEach(record => {
             html += "<div class='entry'>" +
                     "  <div class='entry-top'>" +
-                    "    <img src='" + record.entryPhoto + "' alt='Entry Photo'>" +
+                    "    <img src='" + record.entryPhoto + "' alt='Entry'>" +
                     "    <div class='entry-details'>" +
                     "       <div class='entry-name-text'>" + record.name + "</div>" +
-                    "       <span style='color:#4ade80; font-size:11px; font-weight:bold;'>📥 ENTRY</span><br>" +
+                    "       <span style='color:var(--jk-green); font-size:11px; font-weight:bold;'>📥 ENTRY</span><br>" +
                     "       <strong>🕒 Time:</strong> " + record.entryTime + "<br>" +
                     "       <strong>🏠 Place:</strong> " + record.entryPlace + "" +
                     "    </div>" +
@@ -595,23 +535,22 @@ function renderHistory() {
 
             if (record.exitTime) {
                 html += "  <div class='exit-section'>" +
-                        "    <img class='exit-img' src='" + record.exitPhoto + "' alt='Exit Photo'>" +
+                        "    <img class='exit-img' src='" + record.exitPhoto + "' alt='Exit'>" +
                         "    <div class='entry-details'>" +
-                        "       <span style='color:#f97316; font-size:11px; font-weight:bold;'>📤 EXIT</span><br>" +
+                        "       <span style='color:var(--apollo-orange); font-size:11px; font-weight:bold;'>📤 EXIT</span><br>" +
                         "       <strong>🕒 Time:</strong> " + record.exitTime + "<br>" +
                         "       <strong>🏠 Place:</strong> " + record.exitPlace + "" +
                         "    </div>" +
                         "  </div>";
             } else {
-                html += "  <div class='exit-section' style='background:rgba(255,255,255,0.02); border-top:1px dashed #334155; color:var(--text-muted); padding: 6px 10px; font-style:italic; font-size:11px;'>" +
+                html += "  <div class='exit-section' style='background:rgba(255,255,255,0.02); border-top:1px dashed #374151; color:var(--text-muted); font-style:italic;'>" +
                         "    ⚠️ Market field par hai (Exit Pending)..." +
                         "  </div>";
             }
             html += "</div>";
         });
 
-        html += "  </div>" +
-                "</div>";
+        html += "  </div></div>";
     });
 
     historyDiv.innerHTML = html;
@@ -619,12 +558,10 @@ function renderHistory() {
 
 function toggleDate(dateId) {
     let el = document.getElementById("group-" + dateId);
-    if(el) {
-        el.classList.toggle("collapsed");
-    }
+    if(el) el.classList.toggle("collapsed");
 }
 
-// 🔒 SECURED CSV EXPORT LOGIC WITH PASSWORD LOCK
+// SECURED EXPORT
 function exportToCSV() {
     let password = prompt("Admin Password daalye Excel Report download karne ke liye:");
     if (password !== "DR@2026") {
@@ -654,25 +591,24 @@ function exportToCSV() {
     let encodedUri = encodeURI(csvContent);
     let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `DR_Market_Attendance_Report_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
+    link.setAttribute("download", `DR_Market_Attendance_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 }
 
+// SECURED CLEAR
 function clearHistory() {
     let password = prompt("Admin Password daalye History clear karne ke liye:");
     if (password === "DR@2026") { 
         if (confirm("Kya aap sach me saari history delete karna chahte hain?")) {
             currentAttendanceData = [];
             localStorage.removeItem("dr_attendance_data");
-            document.getElementById("history").innerHTML = "<div class='no-data'>No history found.</div>";
+            renderHistory();
             document.getElementById("result").innerHTML = "";
             alert("History clear ho gayi.");
         }
-    } else if (password === null) {
-        return;
-    } else {
+    } else if (password !== null) {
         alert("Galat Password!");
     }
 }
